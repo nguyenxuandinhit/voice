@@ -73,6 +73,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 import traceback
 
 
@@ -372,17 +373,118 @@ def _model_init_kwargs(
     kwargs = {
         "cfg_path": _resolve_cfg_path(model_dir, version=version),
         "model_dir": model_dir,
-        "use_cuda_kernel": False,
-        "use_deepspeed": False,
+        "use_cuda_kernel": os.environ.get("OMNIVOICE_INDEXTTS_CUDA_KERNEL") == "1",
+        "use_deepspeed": os.environ.get("OMNIVOICE_INDEXTTS_DEEPSPEED") == "1",
     }
     if version == "2.5":
         kwargs.update(
             use_bf16=reduced_precision and _torch_bf16_supported(),
-            use_qwen_emo=True,
+            use_qwen_emo=os.environ.get("OMNIVOICE_INDEXTTS_LAZY_EMOTION") != "1",
+            # Upstream compiles only the S2M flow-matching estimator.
+            use_torch_compile=os.environ.get("OMNIVOICE_INDEXTTS_TORCH_COMPILE") == "1",
         )
     else:
         kwargs["use_fp16"] = reduced_precision
     return kwargs
+
+
+#: Upstream 2.5 hardcodes these inside infer(); they are not infer kwargs.
+_UPSTREAM_S2M_STEPS = 25
+_UPSTREAM_S2M_CFG = 0.7
+
+
+def _default_s2m_autocast(model) -> str | None:
+    """fp16 S2M on CUDA for 2.5: same Whisper CER, speaker similarity and
+    UTMOS as fp32 with ~55% less inference time in the Colab T4 rounds
+    (srs.md section 6.3). Legacy IndexTTS-2 and CPU/MPS keep upstream fp32."""
+    if _model_version != "2.5":
+        return None
+    return "fp16" if str(getattr(model, "device", "")).startswith("cuda") else None
+
+
+def _s2m_overrides(default_autocast: str | None = None) -> dict:
+    """Validated operator overrides for the S2M stage; empty keeps upstream.
+
+    Steps and CFG trade quality for speed and must pass the quality gate
+    before use. Autocast runs S2M (fp32 upstream) in reduced precision;
+    ``fp32`` opts out of ``default_autocast``.
+    """
+    out: dict = {}
+    steps = os.environ.get("OMNIVOICE_INDEXTTS_S2M_STEPS")
+    if steps is not None:
+        try:
+            out["n_timesteps"] = int(steps)
+        except ValueError:
+            out["n_timesteps"] = 0
+        if not 1 <= out["n_timesteps"] <= 100:
+            raise ValueError("OMNIVOICE_INDEXTTS_S2M_STEPS must be an integer from 1 to 100")
+    cfg = os.environ.get("OMNIVOICE_INDEXTTS_S2M_CFG")
+    if cfg is not None:
+        try:
+            rate = float(cfg)
+        except ValueError:
+            rate = -1.0
+        if not (math.isfinite(rate) and 0.0 <= rate <= 2.0):
+            raise ValueError("OMNIVOICE_INDEXTTS_S2M_CFG must be a number from 0 to 2")
+        out["inference_cfg_rate"] = rate
+    autocast = os.environ.get("OMNIVOICE_INDEXTTS_S2M_AUTOCAST")
+    if autocast is not None and autocast not in ("fp16", "bf16", "fp32"):
+        raise ValueError("OMNIVOICE_INDEXTTS_S2M_AUTOCAST must be fp16, bf16 or fp32")
+    autocast = default_autocast if autocast is None else autocast
+    if autocast in ("fp16", "bf16"):
+        out["autocast"] = autocast
+    return out
+
+
+def _low_vram_split_override() -> bool | None:
+    value = os.environ.get("OMNIVOICE_INDEXTTS_LOW_VRAM_SPLIT")
+    if value is None:
+        return None  # upstream decides from total VRAM (< 10 GB splits)
+    if value not in ("0", "1"):
+        raise ValueError("OMNIVOICE_INDEXTTS_LOW_VRAM_SPLIT must be 0 or 1")
+    return value == "1"
+
+
+def _apply_runtime_overrides(model) -> None:
+    """Install opt-in S2M and chunking overrides once on a fresh model."""
+    split = _low_vram_split_override()
+    if split is not None and hasattr(model, "low_vram"):
+        model.low_vram = split
+    overrides = _s2m_overrides(_default_s2m_autocast(model))
+    cfm = _resolve_attr(model, "s2mel.models.cfm")
+    fn = getattr(cfm, "inference", None) if cfm is not None else None
+    if not overrides or not callable(fn):
+        return
+    import inspect
+
+    signature = inspect.signature(fn)
+    autocast = overrides.get("autocast")
+    params = {k: v for k, v in overrides.items() if k != "autocast"}
+
+    def inference(*args, **kwargs):
+        bound = signature.bind(*args, **kwargs)
+        bound.arguments.update(params)
+        if autocast is None:
+            return fn(*bound.args, **bound.kwargs)
+        import torch
+
+        dtype = torch.float16 if autocast == "fp16" else torch.bfloat16
+        with torch.amp.autocast("cuda", dtype=dtype):
+            return fn(*bound.args, **bound.kwargs).float()
+    cfm.inference = inference
+
+
+def _runtime_config(model) -> dict:
+    """Content-free description of the settings that shape this output."""
+    s2m = _s2m_overrides(_default_s2m_autocast(model))
+    return {
+        "gpt_bf16": getattr(model, "use_bf16", None),
+        "s2m_steps": s2m.get("n_timesteps", _UPSTREAM_S2M_STEPS),
+        "s2m_cfg": s2m.get("inference_cfg_rate", _UPSTREAM_S2M_CFG),
+        "s2m_autocast": s2m.get("autocast"),
+        "torch_compile": getattr(model, "use_torch_compile", None),
+        "low_vram_split": getattr(model, "low_vram", None),
+    }
 
 
 def _load_model(stdout) -> object:
@@ -422,6 +524,7 @@ def _load_model(stdout) -> object:
     with _heartbeat(stdout, "loading_model"):
         with _local_checkpoint_config(model_kw["cfg_path"], model_kw["model_dir"]) as cfg_path:
             _model = IndexTTS2(**{**model_kw, "cfg_path": cfg_path})
+    _apply_runtime_overrides(_model)
 
     _send(stdout, {"op": "progress", "stage": "loading_model", "percent": 100})
     return _model
@@ -478,12 +581,19 @@ def _handle_synthesize(msg: dict, stdout) -> None:
             "synthesize: IndexTTS2 requires a 'ref_audio' path for voice cloning"
         )
 
-    model = _load_model(stdout)
-
     # Build infer_kwargs by filtering through the allowlist. The parent
     # has already done any vector-vs-audio-vs-text emotion priority
     # arbitration; we just forward whichever keys it sent.
+    # Validate operator settings before paying for a model load.
+    _beam_override()
+    _s2m_overrides()
+    _low_vram_split_override()
+    started = time.perf_counter()
+    model = _load_model(stdout)
     infer_kw = _build_infer_kwargs(msg, ref_audio, is_v25=_model_version == "2.5")
+    _ensure_text_emotion(model, infer_kw, stdout)
+    timer = _stage_timer_for(model)
+    loaded = time.perf_counter()
 
     # IndexTTS2.infer() writes to a file; we route through tempfile so
     # cleanup is automatic on success and on exit.
@@ -495,7 +605,9 @@ def _handle_synthesize(msg: dict, stdout) -> None:
         # wire; without this the parent kills the sidecar mid-synthesis (#1611).
         with _heartbeat(stdout, "synthesizing"):
             model.infer(**infer_kw)
+        inferred = time.perf_counter()
         pcm_b64, sr, n_samples = _wav_to_pcm_b64(tmp_path)
+        exported = time.perf_counter()
     finally:
         try:
             os.unlink(tmp_path)
@@ -505,12 +617,180 @@ def _handle_synthesize(msg: dict, stdout) -> None:
             # response on a cleanup error.
             pass
 
+    _log_performance(
+        model, load_s=loaded - started, infer_s=inferred - loaded,
+        export_s=exported - inferred, n_samples=n_samples, sr=sr,
+        stages=timer.report(inferred - loaded) if timer else None,
+    )
     _send(stdout, {
         "op": "audio",
         "audio_pcm_b64": pcm_b64,
         "sample_rate": sr,
         "n_samples": n_samples,
     })
+
+
+def _beam_override() -> int | None:
+    value = os.environ.get("OMNIVOICE_INDEXTTS_NUM_BEAMS")
+    if value is None:
+        return None  # preserve upstream's quality default
+    try:
+        beams = int(value)
+        if 1 <= beams <= 16:
+            return beams
+    except ValueError:
+        pass
+    raise ValueError("OMNIVOICE_INDEXTTS_NUM_BEAMS must be an integer from 1 to 16")
+
+
+def _ensure_text_emotion(model, infer_kw: dict, stdout) -> None:
+    """Keep 2.5's optional text-emotion model out of VRAM until requested.
+
+    The sidecar serves requests serially, so this singleton needs no extra
+    threads or lock. A failed construction leaves None and can be retried.
+    Legacy IndexTTS-2 retains its own eager loading and behavior.
+    """
+    if (_model_version != "2.5" or not infer_kw.get("use_emo_text")
+            or getattr(model, "qwen_emo", None) is not None):
+        return
+    from indextts.infer_v2_5 import QwenEmotion
+
+    with _heartbeat(stdout, "loading_model"):
+        model.qwen_emo = QwenEmotion(os.path.join(model.model_dir, model.cfg.qwen_emo_path))
+
+
+#: Upstream (stage, attribute path, method) triples timed when stage timing
+#: is enabled. A missing attribute is skipped, so a renamed upstream method
+#: reports a null stage instead of breaking synthesis.
+_STAGE_TARGETS = (
+    ("speaker_s", "semantic_model", "forward"),
+    ("speaker_s", "campplus_model", "forward"),
+    ("speaker_s", "semantic_codec", "quantize"),
+    ("gpt_s", "gpt", "inference_speech"),
+    ("gpt_s", "gpt", "forward"),
+    ("s2m_s", "s2mel.models.length_regulator", "forward"),
+    ("s2m_s", "s2mel.models.cfm", "inference"),
+    ("vocoder_s", "bigvgan", "forward"),
+)
+_STAGES = ("speaker_s", "gpt_s", "s2m_s", "vocoder_s")
+
+
+def _stage_timing_enabled() -> bool:
+    return os.environ.get("OMNIVOICE_INDEXTTS_STAGE_TIMING") == "1"
+
+
+def _resolve_attr(root, path: str):
+    obj = root
+    for part in path.split("."):
+        nxt = getattr(obj, part, None)
+        if nxt is None:
+            try:
+                nxt = obj[part]
+            except (KeyError, TypeError, IndexError):
+                return None
+        obj = nxt
+    return obj
+
+
+class _StageTimer:
+    """Accumulate wall time per upstream stage for one infer() call.
+
+    Only the outermost timed call counts, so a stage calling another hooked
+    method is not double-counted. CUDA is synchronized at stage boundaries
+    because kernels run asynchronously; that costs a little speed, which is
+    why timing is an operator opt-in.
+    """
+
+    def __init__(self, sync):
+        self._sync = sync
+        self._depth = 0
+        self.hooked: set[str] = set()
+        self.totals: dict[str, float] = {}
+
+    def wrap(self, stage: str, fn):
+        def timed(*args, **kwargs):
+            if self._depth:
+                return fn(*args, **kwargs)
+            self._depth += 1
+            self._sync()
+            started = time.perf_counter()
+            try:
+                return fn(*args, **kwargs)
+            finally:
+                self._sync()
+                self.totals[stage] = self.totals.get(stage, 0.0) + time.perf_counter() - started
+                self._depth -= 1
+        return timed
+
+    def install(self, model) -> None:
+        for stage, path, method in _STAGE_TARGETS:
+            owner = _resolve_attr(model, path)
+            fn = getattr(owner, method, None) if owner is not None else None
+            if not callable(fn):
+                continue
+            try:
+                setattr(owner, method, self.wrap(stage, fn))
+            except (AttributeError, TypeError, RuntimeError):
+                continue  # e.g. a scripted module; report the stage as null
+            self.hooked.add(stage)
+
+    def report(self, infer_s: float) -> dict:
+        stages = {s: (round(self.totals.get(s, 0.0), 4) if s in self.hooked else None)
+                  for s in _STAGES}
+        measured = sum(v for v in stages.values() if v is not None)
+        stages["other_s"] = round(max(infer_s - measured, 0.0), 4)
+        return stages
+
+
+_stage_timer: _StageTimer | None = None
+
+
+def _cuda_sync() -> None:
+    torch = sys.modules.get("torch")
+    if torch is not None and torch.cuda.is_available():
+        torch.cuda.synchronize()
+
+
+def _stage_timer_for(model) -> _StageTimer | None:
+    """Install hooks once per loaded model and reset totals per request."""
+    global _stage_timer
+    if not _stage_timing_enabled():
+        return None
+    if _stage_timer is None:
+        _stage_timer = _StageTimer(_cuda_sync)
+        _stage_timer.install(model)
+    _stage_timer.totals = {}
+    torch = sys.modules.get("torch")
+    if torch is not None and torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats()
+    return _stage_timer
+
+
+def _peak_vram_mb() -> float | None:
+    torch = sys.modules.get("torch")
+    if torch is None or not torch.cuda.is_available():
+        return None
+    return round(torch.cuda.max_memory_allocated() / (1024 ** 2), 1)
+
+
+def _log_performance(model, *, load_s, infer_s, export_s, n_samples, sr, stages=None) -> None:
+    """Content-free timings on stderr; never add frames to the audio protocol."""
+    audio_s = n_samples / sr if sr > 0 else 0.0
+    extra = {"stages": stages, "peak_vram_mb": _peak_vram_mb()} if stages is not None else {}
+    print(json.dumps({
+        "event": "indextts_performance",
+        "version": _model_version,
+        "device": str(getattr(model, "device", "unknown")),
+        "num_beams": _beam_override() or 3,
+        "load_s": round(load_s, 4),
+        "infer_s": round(infer_s, 4),
+        "export_s": round(export_s, 4),
+        "audio_s": round(audio_s, 4),
+        "rtf": round(infer_s / audio_s, 4) if audio_s else None,
+        "allocated_vram_mb": _measure_vram_mb(),
+        "config": _runtime_config(model),
+        **extra,
+    }), file=sys.stderr, flush=True)
 
 
 def _build_infer_kwargs(msg: dict, ref_audio: str, *, is_v25: bool) -> dict:
@@ -520,6 +800,9 @@ def _build_infer_kwargs(msg: dict, ref_audio: str, *, is_v25: bool) -> dict:
         "text": msg.get("text"),
         "verbose": False,
     }
+    beams = _beam_override()
+    if beams is not None:
+        infer_kw["num_beams"] = beams
     for k, v in msg.items():
         if k in EMOTION_KWARGS_ALLOWLIST and v is not None:
             infer_kw[k] = v

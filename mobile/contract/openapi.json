@@ -5411,6 +5411,56 @@
     "title": "_HistoryRetentionBody",
     "type": "object"
    },
+   "_IndexTTSTuningBody": {
+    "properties": {
+     "low_vram_split": {
+      "anyOf": [
+       {
+        "enum": [
+         "auto",
+         "on",
+         "off"
+        ],
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Low Vram Split"
+     },
+     "num_beams": {
+      "anyOf": [
+       {
+        "maximum": 16.0,
+        "minimum": 1.0,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Num Beams"
+     },
+     "s2m_precision": {
+      "anyOf": [
+       {
+        "enum": [
+         "fp16",
+         "fp32"
+        ],
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "S2M Precision"
+     }
+    },
+    "title": "_IndexTTSTuningBody",
+    "type": "object"
+   },
    "_LLMActiveBody": {
     "properties": {
      "provider": {
@@ -8039,6 +8089,64 @@
      }
     },
     "summary": "Set Pause Fill",
+    "tags": [
+     "settings"
+    ]
+   }
+  },
+  "/api/settings/perf/indextts": {
+   "get": {
+    "description": "Effective IndexTTS sidecar settings, env-pinned fields and GPU size.",
+    "operationId": "get_indextts_tuning_api_settings_perf_indextts_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Get Indextts Tuning",
+    "tags": [
+     "settings"
+    ]
+   },
+   "put": {
+    "description": "Persist the given fields; restarts an idle IndexTTS sidecar so the\nnext generation uses them (a busy one picks them up on its next start).",
+    "operationId": "set_indextts_tuning_api_settings_perf_indextts_put",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/_IndexTTSTuningBody"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Set Indextts Tuning",
     "tags": [
      "settings"
     ]

@@ -1522,7 +1522,18 @@
     "gpu_report_engine_no_family_path": "CPU: GPU türünüz için yol yok",
     "gpu_report_engine_no_gpu": "CPU: kullanılabilir GPU yok",
     "gpu_report_engine_needs_accelerator": "Bu bilgisayarda olmayan bir GPU ({{needs}}) gerekir",
-    "models_dir_desc": "İndirilen modeller burada saklanır. Bu sürücü dolarsa daha fazla boş alanı olan bir sürücü seçin."
+    "models_dir_desc": "İndirilen modeller burada saklanır. Bu sürücü dolarsa daha fazla boş alanı olan bir sürücü seçin.",
+    "indextts_title": "Bu bilgisayardaki IndexTTS",
+    "indextts_desc": "Anlatım için ölçülmüş ayarlar. Her bilgisayar kendi seçimini kaydeder.",
+    "indextts_precision": "Ses üretim hassasiyeti (S2M)",
+    "indextts_precision_desc": "fp16, NVIDIA GPU'larda aynı ölçülen kaliteyle yaklaşık iki kat hızlıdır. fp32, IndexTTS'in orijinal ayarıdır.",
+    "indextts_beams": "Işın araması (beam)",
+    "indextts_beams_desc": "3 en doğru okur. 1 biraz daha hızlıdır ama testlerde kelimeleri yanlış okudu.",
+    "indextts_split": "Uzun cümleleri böl",
+    "indextts_split_desc": "10 GB altı GPU'larda IndexTTS 40 karakterden uzun metni böler. Testlerde bu, daha iyi duyulmadan %12 daha yavaştı.",
+    "indextts_split_note": "Bu GPU'da {{gb}} GB var, bu yüzden Otomatik cümleleri böler. Uzun işler GPU belleğine sığıyorsa Kapalı'yı seçin.",
+    "indextts_saved_now": "Kaydedildi. IndexTTS yeniden başlatıldı; sonraki üretim yeni ayarları kullanır.",
+    "indextts_saved_later": "Kaydedildi. Yeni ayarlar IndexTTS bir sonraki yüklendiğinde geçerli olur."
   },
   "gallery": {
     "title": "VoiceStudio Galeri",

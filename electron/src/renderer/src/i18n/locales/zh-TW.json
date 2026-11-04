@@ -1522,7 +1522,18 @@
     "gpu_report_engine_no_family_path": "CPU：沒有適用於你的 GPU 類型的路徑",
     "gpu_report_engine_no_gpu": "CPU：沒有可用的 GPU",
     "gpu_report_engine_needs_accelerator": "需要這台電腦沒有的 GPU（{{needs}}）",
-    "models_dir_desc": "下載的模型存放在這裡。如果此磁碟空間不足，請選擇剩餘空間更多的磁碟。"
+    "models_dir_desc": "下載的模型存放在這裡。如果此磁碟空間不足，請選擇剩餘空間更多的磁碟。",
+    "indextts_title": "本機 IndexTTS",
+    "indextts_desc": "為旁白量測過的設定。每台電腦各自儲存選擇。",
+    "indextts_precision": "聲音生成精度（S2M）",
+    "indextts_precision_desc": "在 NVIDIA GPU 上 fp16 約快一倍，量測到的品質相同。fp32 是 IndexTTS 的原始設定。",
+    "indextts_beams": "束搜尋（Beam）",
+    "indextts_beams_desc": "3 讀得最準確。1 稍快，但測試中唸錯了字。",
+    "indextts_split": "拆分長句",
+    "indextts_split_desc": "在顯示記憶體低於 10 GB 的 GPU 上，IndexTTS 會拆分超過 40 個字元的文字。測試中這樣慢 12%，聽起來也沒有更好。",
+    "indextts_split_note": "此 GPU 有 {{gb}} GB，因此「自動」會拆分句子。如果長任務仍放得進顯示記憶體，請選擇「關閉」。",
+    "indextts_saved_now": "已儲存。IndexTTS 已重新啟動，下一次生成會使用新設定。",
+    "indextts_saved_later": "已儲存。新設定會在下次載入 IndexTTS 時生效。"
   },
   "gallery": {
     "title": "VoiceStudio 畫廊",

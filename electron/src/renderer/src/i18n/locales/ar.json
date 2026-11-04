@@ -1550,7 +1550,18 @@
     "gpu_report_engine_no_family_path": "CPU: لا يوجد مسار لنوع GPU لديك",
     "gpu_report_engine_no_gpu": "CPU: لا يتوفر GPU",
     "gpu_report_engine_needs_accelerator": "يحتاج إلى GPU ({{needs}}) غير موجود في هذا الجهاز",
-    "models_dir_desc": "تُخزَّن النماذج المنزّلة هنا. اختر قرصًا به مساحة أكبر إذا امتلأ هذا القرص."
+    "models_dir_desc": "تُخزَّن النماذج المنزّلة هنا. اختر قرصًا به مساحة أكبر إذا امتلأ هذا القرص.",
+    "indextts_title": "IndexTTS على هذا الجهاز",
+    "indextts_desc": "إعدادات مُقاسة للسرد. يحفظ كل جهاز اختياره الخاص.",
+    "indextts_precision": "دقة توليد الصوت (S2M)",
+    "indextts_precision_desc": "fp16 أسرع بنحو الضعف على بطاقات NVIDIA بنفس الجودة المقاسة. fp32 هو الإعداد الأصلي لـ IndexTTS.",
+    "indextts_beams": "البحث الشعاعي (Beam)",
+    "indextts_beams_desc": "القيمة 3 هي الأدق. القيمة 1 أسرع قليلًا لكنها أخطأت في نطق كلمات أثناء الاختبار.",
+    "indextts_split": "تقسيم الجمل الطويلة",
+    "indextts_split_desc": "على البطاقات الأقل من 10 GB يقسّم IndexTTS النص الأطول من 40 حرفًا. في الاختبار كان أبطأ بنسبة 12% دون تحسن في الصوت.",
+    "indextts_split_note": "تحتوي هذه البطاقة على {{gb}} GB، لذا يقسّم الوضع التلقائي الجمل. اختر إيقاف إذا كانت المهام الطويلة تتسع في ذاكرة البطاقة.",
+    "indextts_saved_now": "تم الحفظ. أُعيد تشغيل IndexTTS وسيستخدم التوليد التالي الإعدادات الجديدة.",
+    "indextts_saved_later": "تم الحفظ. تُطبَّق الإعدادات الجديدة عند تحميل IndexTTS في المرة القادمة."
   },
   "gallery": {
     "title": "VoiceStudio معرض",

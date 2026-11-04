@@ -1536,7 +1536,18 @@
     "gpu_report_engine_no_family_path": "CPU: brak ścieżki dla Twojego typu GPU",
     "gpu_report_engine_no_gpu": "CPU: brak dostępnego GPU",
     "gpu_report_engine_needs_accelerator": "Wymaga GPU ({{needs}}), którego ten komputer nie ma",
-    "models_dir_desc": "Tu są przechowywane pobrane modele. Jeśli ten dysk się zapełni, wybierz dysk z większą ilością wolnego miejsca."
+    "models_dir_desc": "Tu są przechowywane pobrane modele. Jeśli ten dysk się zapełni, wybierz dysk z większą ilością wolnego miejsca.",
+    "indextts_title": "IndexTTS na tym komputerze",
+    "indextts_desc": "Zmierzone ustawienia do narracji. Każdy komputer zapisuje własny wybór.",
+    "indextts_precision": "Precyzja generowania dźwięku (S2M)",
+    "indextts_precision_desc": "fp16 jest na GPU NVIDIA mniej więcej dwa razy szybsze przy tej samej zmierzonej jakości. fp32 to oryginalne ustawienie IndexTTS.",
+    "indextts_beams": "Wyszukiwanie wiązkowe (beam)",
+    "indextts_beams_desc": "3 czyta najdokładniej. 1 jest nieco szybsze, ale w testach źle odczytało słowa.",
+    "indextts_split": "Dziel długie zdania",
+    "indextts_split_desc": "Na GPU poniżej 10 GB IndexTTS dzieli tekst dłuższy niż 40 znaków. W testach było to o 12% wolniejsze i nie brzmiało lepiej.",
+    "indextts_split_note": "Ten GPU ma {{gb}} GB, więc tryb Automatyczny dzieli zdania. Wybierz Wyłączone, jeśli długie zadania mieszczą się w pamięci GPU.",
+    "indextts_saved_now": "Zapisano. IndexTTS został uruchomiony ponownie, a następne generowanie użyje nowych ustawień.",
+    "indextts_saved_later": "Zapisano. Nowe ustawienia zadziałają przy następnym wczytaniu IndexTTS."
   },
   "gallery": {
     "title": "VoiceStudio Galeria",

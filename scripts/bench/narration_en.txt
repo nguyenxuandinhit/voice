@@ -1,0 +1,16 @@
+# Fixed English narration set for scripts/indextts_stage_benchmark.py.
+# One segment per line; short, medium and long lines on purpose. Keep it unchanged between runs.
+The door creaked open.
+"Who's there?" she whispered.
+Nobody answered, and the silence felt heavier than any reply.
+On the morning of the third of March, the village woke to find the river had turned silver.
+Old Tomas had seen many strange things in his eighty-two years, but never anything like this.
+He pulled on his boots, grabbed his walking stick, and set off toward the water before anyone else could stop him.
+The children followed at a distance, half afraid and half delighted, as children always are when something impossible happens.
+"Stay back!" he shouted, though his voice trembled more with wonder than with fear.
+By noon, nearly two hundred people had gathered along the bank, each one with a different theory and no proof at all.
+Some said it was a curse. Others said it was a gift.
+Mira, the baker's daughter, said nothing; she simply knelt, dipped her fingers into the river, and smiled.
+The water was warm, warmer than it had any right to be in early spring, and it hummed faintly, like a song remembered from a dream.
+That night, for the first time in years, nobody in the village could sleep, and nobody wanted to.
+And that, my friends, is how the story of the Silver River began.

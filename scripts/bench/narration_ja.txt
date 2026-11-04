@@ -1,0 +1,6 @@
+# Japanese narration test set (user-provided) for scripts/indextts_stage_benchmark.py --lang ja.
+# One segment per line. Keep it unchanged between runs.
+夜勤明けの朝、私は玄関の前に立っていました。鍵を差しても、回らないんです。
+え……どうして？七年間、一度も変わらなかった鍵なのに。
+インターホンの向こうで、義母が笑いました。「あら、まだいたの？あなたの荷物なら、もう全部捨てたわよ」
+七年間、毎朝お弁当を作って、お義父さんの介護もして……それが、この仕打ちですか！

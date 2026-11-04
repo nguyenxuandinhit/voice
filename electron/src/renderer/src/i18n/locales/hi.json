@@ -1522,7 +1522,18 @@
     "gpu_report_engine_no_family_path": "CPU: आपके GPU प्रकार के लिए रास्ता नहीं",
     "gpu_report_engine_no_gpu": "CPU: कोई GPU उपलब्ध नहीं",
     "gpu_report_engine_needs_accelerator": "ऐसे GPU ({{needs}}) की ज़रूरत है जो इस मशीन में नहीं है",
-    "models_dir_desc": "डाउनलोड किए गए मॉडल यहाँ रखे जाते हैं। यह ड्राइव भर जाए तो ज़्यादा खाली जगह वाली ड्राइव चुनें।"
+    "models_dir_desc": "डाउनलोड किए गए मॉडल यहाँ रखे जाते हैं। यह ड्राइव भर जाए तो ज़्यादा खाली जगह वाली ड्राइव चुनें।",
+    "indextts_title": "इस मशीन पर IndexTTS",
+    "indextts_desc": "कथावाचन के लिए मापी गई सेटिंग्स। हर मशीन अपनी पसंद अलग से सहेजती है।",
+    "indextts_precision": "ध्वनि निर्माण की सटीकता (S2M)",
+    "indextts_precision_desc": "NVIDIA GPU पर fp16 लगभग दोगुना तेज़ है और मापी गई गुणवत्ता वही रहती है। fp32 IndexTTS की मूल सेटिंग है।",
+    "indextts_beams": "बीम सर्च",
+    "indextts_beams_desc": "3 सबसे सटीक पढ़ता है। 1 थोड़ा तेज़ है, लेकिन परीक्षण में शब्द गलत पढ़े।",
+    "indextts_split": "लंबे वाक्य बाँटें",
+    "indextts_split_desc": "10 GB से कम वाले GPU पर IndexTTS 40 अक्षरों से लंबा टेक्स्ट बाँट देता है। परीक्षण में यह 12% धीमा था और बेहतर नहीं लगा।",
+    "indextts_split_note": "इस GPU में {{gb}} GB है, इसलिए स्वचालित वाक्य बाँटेगा। अगर लंबे काम GPU मेमोरी में आ जाते हैं तो बंद चुनें।",
+    "indextts_saved_now": "सहेजा गया। IndexTTS फिर से शुरू हुआ और अगला निर्माण नई सेटिंग्स इस्तेमाल करेगा।",
+    "indextts_saved_later": "सहेजा गया। नई सेटिंग्स अगली बार IndexTTS लोड होने पर लागू होंगी।"
   },
   "gallery": {
     "title": "VoiceStudio गैलरी",

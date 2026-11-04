@@ -1522,7 +1522,18 @@
     "gpu_report_engine_no_family_path": "CPU: không có đường chạy cho loại GPU của bạn",
     "gpu_report_engine_no_gpu": "CPU: không có GPU",
     "gpu_report_engine_needs_accelerator": "Cần GPU ({{needs}}) mà máy này không có",
-    "models_dir_desc": "Các mô hình đã tải được lưu ở đây. Hãy chọn ổ có nhiều dung lượng trống hơn nếu ổ này đầy."
+    "models_dir_desc": "Các mô hình đã tải được lưu ở đây. Hãy chọn ổ có nhiều dung lượng trống hơn nếu ổ này đầy.",
+    "indextts_title": "IndexTTS trên máy này",
+    "indextts_desc": "Thiết lập đã đo cho đọc truyện. Mỗi máy lưu lựa chọn riêng.",
+    "indextts_precision": "Độ chính xác dựng âm (S2M)",
+    "indextts_precision_desc": "fp16 nhanh gần gấp đôi trên GPU NVIDIA, chất lượng đo được như cũ. fp32 là thiết lập gốc của IndexTTS.",
+    "indextts_beams": "Beam (độ kỹ khi đọc)",
+    "indextts_beams_desc": "3 đọc chính xác nhất. 1 nhanh hơn một chút nhưng đã đọc sai chữ khi đo.",
+    "indextts_split": "Cắt câu dài",
+    "indextts_split_desc": "Trên GPU dưới 10 GB, IndexTTS tự cắt câu dài hơn 40 ký tự. Khi đo, cách này chậm hơn 12% mà không hay hơn.",
+    "indextts_split_note": "GPU này có {{gb}} GB nên Tự động sẽ cắt câu. Chọn Tắt nếu bài dài vẫn đủ bộ nhớ GPU.",
+    "indextts_saved_now": "Đã lưu. IndexTTS đã được khởi động lại, lần tạo giọng tiếp theo dùng thiết lập mới.",
+    "indextts_saved_later": "Đã lưu. Thiết lập mới áp dụng ở lần nạp IndexTTS tiếp theo."
   },
   "gallery": {
     "title": "VoiceStudio Thư viện ảnh",

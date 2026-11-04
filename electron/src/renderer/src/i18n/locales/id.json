@@ -1522,7 +1522,18 @@
     "gpu_report_engine_no_family_path": "CPU: tidak ada jalur untuk jenis GPU Anda",
     "gpu_report_engine_no_gpu": "CPU: tidak ada GPU",
     "gpu_report_engine_needs_accelerator": "Memerlukan GPU ({{needs}}) yang tidak dimiliki komputer ini",
-    "models_dir_desc": "Model yang diunduh disimpan di sini. Pilih drive dengan ruang kosong lebih besar jika drive ini penuh."
+    "models_dir_desc": "Model yang diunduh disimpan di sini. Pilih drive dengan ruang kosong lebih besar jika drive ini penuh.",
+    "indextts_title": "IndexTTS di mesin ini",
+    "indextts_desc": "Pengaturan terukur untuk narasi. Setiap mesin menyimpan pilihannya sendiri.",
+    "indextts_precision": "Presisi pembuatan suara (S2M)",
+    "indextts_precision_desc": "fp16 hampir dua kali lebih cepat di GPU NVIDIA dengan kualitas terukur yang sama. fp32 adalah pengaturan asli IndexTTS.",
+    "indextts_beams": "Pencarian beam",
+    "indextts_beams_desc": "3 membaca paling akurat. 1 sedikit lebih cepat tetapi salah membaca kata saat diuji.",
+    "indextts_split": "Pecah kalimat panjang",
+    "indextts_split_desc": "Pada GPU di bawah 10 GB, IndexTTS memecah teks lebih dari 40 karakter. Saat diuji, ini 12% lebih lambat tanpa terdengar lebih baik.",
+    "indextts_split_note": "GPU ini memiliki {{gb}} GB, jadi Otomatis akan memecah kalimat. Pilih Mati jika pekerjaan panjang masih muat di memori GPU.",
+    "indextts_saved_now": "Tersimpan. IndexTTS dimulai ulang dan pembuatan berikutnya memakai pengaturan baru.",
+    "indextts_saved_later": "Tersimpan. Pengaturan baru berlaku saat IndexTTS dimuat berikutnya."
   },
   "gallery": {
     "title": "VoiceStudio Galeri",

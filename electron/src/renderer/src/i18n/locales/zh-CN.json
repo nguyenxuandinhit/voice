@@ -1522,7 +1522,18 @@
     "review_mode": "审核模式",
     "review_mode_off": "直接执行到底",
     "translate_cinematic": "影视级",
-    "translate_quality_desc": "快速模式直译且速度快；影视级模式使用 LLM 生成自然表达。"
+    "translate_quality_desc": "快速模式直译且速度快；影视级模式使用 LLM 生成自然表达。",
+    "indextts_title": "本机 IndexTTS",
+    "indextts_desc": "为旁白测得的设置。每台机器单独保存自己的选择。",
+    "indextts_precision": "声音生成精度（S2M）",
+    "indextts_precision_desc": "在 NVIDIA GPU 上 fp16 约快一倍，测得的质量相同。fp32 是 IndexTTS 的原始设置。",
+    "indextts_beams": "束搜索（Beam）",
+    "indextts_beams_desc": "3 读得最准确。1 稍快，但测试中读错了字。",
+    "indextts_split": "拆分长句",
+    "indextts_split_desc": "在显存低于 10 GB 的 GPU 上，IndexTTS 会拆分超过 40 个字符的文本。测试中这样慢 12%，听起来也没有更好。",
+    "indextts_split_note": "此 GPU 有 {{gb}} GB，因此“自动”会拆分句子。如果长任务仍能放进显存，请选择“关闭”。",
+    "indextts_saved_now": "已保存。IndexTTS 已重启，下一次生成将使用新设置。",
+    "indextts_saved_later": "已保存。新设置将在下次加载 IndexTTS 时生效。"
   },
   "gallery": {
     "title": "VoiceStudio 音色库",

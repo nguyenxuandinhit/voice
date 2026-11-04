@@ -1690,7 +1690,18 @@
     "gpu_report_engine_no_family_path": "CPU: no path for your GPU type",
     "gpu_report_engine_no_gpu": "CPU: no GPU available",
     "gpu_report_engine_needs_accelerator": "Needs a GPU ({{needs}}) this machine does not have",
-    "models_dir_desc": "Downloaded models are stored here. Choose a drive with more free space if this one fills up."
+    "models_dir_desc": "Downloaded models are stored here. Choose a drive with more free space if this one fills up.",
+    "indextts_title": "IndexTTS on this machine",
+    "indextts_desc": "Measured settings for narration. Each machine saves its own choice.",
+    "indextts_precision": "Sound rendering precision (S2M)",
+    "indextts_precision_desc": "fp16 is about twice as fast on NVIDIA GPUs with the same measured quality. fp32 is the original IndexTTS setting.",
+    "indextts_beams": "Beam search",
+    "indextts_beams_desc": "3 reads most accurately. 1 is slightly faster but misread words in tests.",
+    "indextts_split": "Split long sentences",
+    "indextts_split_desc": "On GPUs under 10 GB, IndexTTS splits text over 40 characters. In tests this was 12% slower without sounding better.",
+    "indextts_split_note": "This GPU has {{gb}} GB, so Auto splits sentences. Choose Off if long jobs still fit in GPU memory.",
+    "indextts_saved_now": "Saved. IndexTTS was restarted and the next generation uses the new settings.",
+    "indextts_saved_later": "Saved. The new settings apply the next time IndexTTS loads."
   },
   "gallery": {
     "title": "VoiceStudio Gallery",

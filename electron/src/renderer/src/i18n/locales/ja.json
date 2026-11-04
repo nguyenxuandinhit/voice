@@ -1522,7 +1522,18 @@
     "gpu_report_engine_no_family_path": "CPU：お使いの GPU の種類に対応する経路がありません",
     "gpu_report_engine_no_gpu": "CPU：GPU がありません",
     "gpu_report_engine_needs_accelerator": "このマシンにない GPU（{{needs}}）が必要です",
-    "models_dir_desc": "ダウンロードしたモデルはここに保存されます。空き容量が足りなくなったら、より空きのあるドライブを選んでください。"
+    "models_dir_desc": "ダウンロードしたモデルはここに保存されます。空き容量が足りなくなったら、より空きのあるドライブを選んでください。",
+    "indextts_title": "このマシンの IndexTTS",
+    "indextts_desc": "ナレーション向けに計測した設定です。マシンごとに選択を保存します。",
+    "indextts_precision": "音声生成の精度（S2M）",
+    "indextts_precision_desc": "fp16 は NVIDIA GPU で約2倍速く、計測した品質は同じです。fp32 は IndexTTS の元の設定です。",
+    "indextts_beams": "ビームサーチ",
+    "indextts_beams_desc": "3 が最も正確に読みます。1 は少し速いものの、テストで単語を読み間違えました。",
+    "indextts_split": "長い文を分割",
+    "indextts_split_desc": "10 GB 未満の GPU では、IndexTTS は 40 文字を超える文を分割します。テストでは 12% 遅く、音質も向上しませんでした。",
+    "indextts_split_note": "この GPU は {{gb}} GB のため、自動では文を分割します。長い処理が GPU メモリに収まる場合はオフを選んでください。",
+    "indextts_saved_now": "保存しました。IndexTTS を再起動したので、次の生成から新しい設定を使います。",
+    "indextts_saved_later": "保存しました。新しい設定は次に IndexTTS を読み込むときに適用されます。"
   },
   "gallery": {
     "title": "VoiceStudio ギャラリー",

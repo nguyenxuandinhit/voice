@@ -1522,7 +1522,18 @@
     "gpu_report_engine_no_family_path": "CPU: geen pad voor uw GPU-type",
     "gpu_report_engine_no_gpu": "CPU: geen GPU beschikbaar",
     "gpu_report_engine_needs_accelerator": "Heeft een GPU ({{needs}}) nodig die deze computer niet heeft",
-    "models_dir_desc": "Gedownloade modellen worden hier opgeslagen. Kies een schijf met meer vrije ruimte als deze volraakt."
+    "models_dir_desc": "Gedownloade modellen worden hier opgeslagen. Kies een schijf met meer vrije ruimte als deze volraakt.",
+    "indextts_title": "IndexTTS op deze computer",
+    "indextts_desc": "Gemeten instellingen voor vertelling. Elke computer bewaart zijn eigen keuze.",
+    "indextts_precision": "Precisie van klankopbouw (S2M)",
+    "indextts_precision_desc": "fp16 is op NVIDIA-GPU's ongeveer twee keer zo snel met dezelfde gemeten kwaliteit. fp32 is de oorspronkelijke instelling van IndexTTS.",
+    "indextts_beams": "Beam search",
+    "indextts_beams_desc": "3 leest het nauwkeurigst. 1 is iets sneller maar las in tests woorden verkeerd.",
+    "indextts_split": "Lange zinnen splitsen",
+    "indextts_split_desc": "Op GPU's onder 10 GB splitst IndexTTS tekst van meer dan 40 tekens. In tests was dat 12% trager zonder beter te klinken.",
+    "indextts_split_note": "Deze GPU heeft {{gb}} GB, dus Automatisch splitst zinnen. Kies Uit als lange taken in het GPU-geheugen passen.",
+    "indextts_saved_now": "Opgeslagen. IndexTTS is herstart en de volgende generatie gebruikt de nieuwe instellingen.",
+    "indextts_saved_later": "Opgeslagen. De nieuwe instellingen gelden de volgende keer dat IndexTTS laadt."
   },
   "gallery": {
     "title": "VoiceStudio Galerij",

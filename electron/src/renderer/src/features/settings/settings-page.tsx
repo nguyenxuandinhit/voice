@@ -136,6 +136,7 @@ const extraSettings = [
       'settings.compute_device_title',
       'setup.system_preflight',
       'settings.perf_torch_compile',
+      'settings.indextts_title',
       'settings.generate_budget_title',
     ],
   },

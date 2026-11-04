@@ -244,6 +244,50 @@ def set_offload_after_generation(body: _OffloadAfterGenerationBody):
     return _offload_after_generation_state()
 
 
+# ── IndexTTS tuning for this machine (srs.md section 6.3) ─────────────────
+
+
+class _IndexTTSTuningBody(BaseModel):
+    s2m_precision: Literal["fp16", "fp32"] | None = None
+    low_vram_split: Literal["auto", "on", "off"] | None = None
+    num_beams: int | None = Field(None, ge=1, le=16)
+
+
+def _vram_total_gb() -> float:
+    try:
+        from api.routers.system import _VRAM_TOTAL_GB
+        return float(_VRAM_TOTAL_GB)
+    except Exception:  # noqa: BLE001 — a GPU probe must not break Settings
+        return 0.0
+
+
+@router.get("/perf/indextts")
+def get_indextts_tuning():
+    """Effective IndexTTS sidecar settings, env-pinned fields and GPU size."""
+    from services import indextts_tuning
+
+    return indextts_tuning.state(_vram_total_gb())
+
+
+@router.put("/perf/indextts")
+def set_indextts_tuning(body: _IndexTTSTuningBody):
+    """Persist the given fields; restarts an idle IndexTTS sidecar so the
+    next generation uses them (a busy one picks them up on its next start)."""
+    from services import indextts_tuning
+
+    changes = body.model_dump(exclude_none=True)
+    try:
+        restarted = indextts_tuning.apply(changes)
+    except PermissionError as exc:
+        raise HTTPException(status_code=409, detail=f"Pinned by an environment variable: {exc}")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except Exception:
+        logger.exception("set_indextts_tuning failed")
+        raise HTTPException(status_code=500, detail="Failed to persist setting")
+    return indextts_tuning.state(_vram_total_gb(), restarted=restarted)
+
+
 # ── Pause fill: digital silence or room tone (#3611) ──────────────────────
 
 

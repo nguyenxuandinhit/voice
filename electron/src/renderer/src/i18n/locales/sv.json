@@ -1522,7 +1522,18 @@
     "gpu_report_engine_no_family_path": "CPU: ingen väg för din GPU-typ",
     "gpu_report_engine_no_gpu": "CPU: ingen GPU tillgänglig",
     "gpu_report_engine_needs_accelerator": "Kräver en GPU ({{needs}}) som den här datorn inte har",
-    "models_dir_desc": "Nedladdade modeller lagras här. Välj en enhet med mer ledigt utrymme om den här blir full."
+    "models_dir_desc": "Nedladdade modeller lagras här. Välj en enhet med mer ledigt utrymme om den här blir full.",
+    "indextts_title": "IndexTTS på den här datorn",
+    "indextts_desc": "Uppmätta inställningar för berättande. Varje dator sparar sitt eget val.",
+    "indextts_precision": "Precision för ljudgenerering (S2M)",
+    "indextts_precision_desc": "fp16 är ungefär dubbelt så snabbt på NVIDIA-GPU:er med samma uppmätta kvalitet. fp32 är IndexTTS ursprungliga inställning.",
+    "indextts_beams": "Strålsökning (beam)",
+    "indextts_beams_desc": "3 läser mest exakt. 1 är något snabbare men läste fel ord i tester.",
+    "indextts_split": "Dela långa meningar",
+    "indextts_split_desc": "På GPU:er under 10 GB delar IndexTTS text över 40 tecken. I tester var det 12 % långsammare utan att låta bättre.",
+    "indextts_split_note": "Den här GPU:n har {{gb}} GB, så Automatiskt delar meningar. Välj Av om långa jobb ryms i GPU-minnet.",
+    "indextts_saved_now": "Sparat. IndexTTS startades om och nästa generering använder de nya inställningarna.",
+    "indextts_saved_later": "Sparat. De nya inställningarna gäller nästa gång IndexTTS laddas."
   },
   "gallery": {
     "title": "VoiceStudio Galleri",

@@ -135,6 +135,11 @@ it is relative, so it applies to every streamed sentence.
 
 ## Troubleshooting
 
+For optional beam/accelerator controls, deferred text-emotion loading, a
+single-job launcher and the paired Colab workflow, see
+[IndexTTS performance build](../indextts-performance.md). Ordinary launches
+retain upstream defaults; measure quality and speed before choosing a preset.
+
 ### Engine unavailable
 
 Use **Model Catalogue → IndexTTS 2.5 → Install**. For a manual install,

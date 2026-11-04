@@ -1524,7 +1524,18 @@
     "gpu_report_engine_no_family_path": "CPU : aucun chemin pour votre type de GPU",
     "gpu_report_engine_no_gpu": "CPU : aucun GPU disponible",
     "gpu_report_engine_needs_accelerator": "Nécessite un GPU ({{needs}}) que cette machine n'a pas",
-    "models_dir_desc": "Les modèles téléchargés sont stockés ici. Choisissez un disque avec plus d'espace libre si celui-ci se remplit."
+    "models_dir_desc": "Les modèles téléchargés sont stockés ici. Choisissez un disque avec plus d'espace libre si celui-ci se remplit.",
+    "indextts_title": "IndexTTS sur cette machine",
+    "indextts_desc": "Réglages mesurés pour la narration. Chaque machine enregistre son propre choix.",
+    "indextts_precision": "Précision du rendu sonore (S2M)",
+    "indextts_precision_desc": "fp16 est environ deux fois plus rapide sur les GPU NVIDIA avec la même qualité mesurée. fp32 est le réglage d’origine d’IndexTTS.",
+    "indextts_beams": "Recherche en faisceau (beam)",
+    "indextts_beams_desc": "3 lit le plus précisément. 1 est un peu plus rapide mais a mal lu des mots lors des tests.",
+    "indextts_split": "Découper les phrases longues",
+    "indextts_split_desc": "Sur les GPU de moins de 10 Go, IndexTTS découpe le texte de plus de 40 caractères. En test, c’était 12 % plus lent sans meilleur rendu.",
+    "indextts_split_note": "Ce GPU a {{gb}} Go, donc Auto découpe les phrases. Choisissez Désactivé si les longues tâches tiennent en mémoire GPU.",
+    "indextts_saved_now": "Enregistré. IndexTTS a redémarré et la prochaine génération utilisera les nouveaux réglages.",
+    "indextts_saved_later": "Enregistré. Les nouveaux réglages s’appliquent au prochain chargement d’IndexTTS."
   },
   "gallery": {
     "title": "VoiceStudio Galerie",

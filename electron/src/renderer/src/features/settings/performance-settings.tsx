@@ -7,6 +7,7 @@ import {
   ZapIcon,
 } from 'lucide-react';
 import { GpuAcceleration } from './gpu-acceleration';
+import { IndexTTSTuning } from './indextts-tuning';
 import { SystemPreflight } from './system-preflight';
 import { PerformanceProfile } from '@/components/performance-profile';
 import { familyIcons, modelFamilies } from './model-family';
@@ -135,6 +136,7 @@ export function PerformanceSettings() {
       <GpuAcceleration />
       <CompileSetting />
       <MemoryManagement />
+      <IndexTTSTuning />
       <SettingsSection icon={CpuIcon} title={t('settings.generate_budget_title')}>
         <p className="p-4 text-sm text-muted-foreground">{t('settings.generate_budget_desc')}</p>
         <BudgetRow
