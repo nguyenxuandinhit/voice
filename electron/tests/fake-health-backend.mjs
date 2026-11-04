@@ -164,6 +164,14 @@ export const DEFAULT_FIXTURES = {
     engines: [],
   },
   '/api/settings/hf-token/state': { active: null, sources: [] },
+  '/api/settings/perf/indextts': {
+    s2m_precision: 'fp16',
+    num_beams: 3,
+    low_vram_split: 'auto',
+    env_pinned: [],
+    vram_total_gb: 0,
+    upstream_splits: false,
+  },
   '/api/settings/perf/offload-after-generation': {
     enabled: false,
     env_pinned: false,
